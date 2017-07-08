@@ -121,6 +121,7 @@ var io= require( 'socket.io'). listen(server);
       var message= hit(battlefield,data)
       io.emit("hit_result",message)
       io.emit("battlefield",battlefield)
+      io.emit('count',team_count(battlefield))
     })
     socket.on('new_player', function(user){
       console.log(user)
