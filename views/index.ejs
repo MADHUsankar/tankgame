@@ -24,26 +24,55 @@
     <script type ="text/javascript" src="/socket.io/socket.io.js"></script>
     <script type="text/javascript">
     $(document). ready(function (){
+      // create battlefield
+
+      $('#size_button').click(function(){
+        var size=$('#size').val()
+        var row_size=Math.floor(Math.sqrt(size))
+        var table_row="<tr>"
+        // console.log(size)
+        for(let i=1; i<=size; i++){
+          //append rows when i % row_size==0 else append cells
+          let test1=((i-1)%row_size===0)
+          let test2=(i-1)!=0
+          if(test1 && test2){
+            table_row+="</tr>"
+            console.log("row",table_row)
+            $('table').append(table_row)
+            table_row="<tr>"
+          }
+          table_row+="<td id="+(i-1)+">*</td>"
+          console.log("column", table_row)
+        }
+          table_row+="</tr>"
+          $('table').append(table_row)
+          $('#make_field').hide()
+          // send size to backend
+          
+      })
+
+
+
       var name;
       var team;
       var count=0
           var socket  = io. connect();
           //hit result
           socket.on('hit_result',function(data){
-            console.log(data)
+            // console.log(data)
             count++
-            console.log(count)
+            // console.log(count)
             $('#message').html(data)
           })
           // count listening
           socket.on('count',function(data){
-            console.log(data)
+            // console.log(data)
             $('#green_count').html("Green: "+data.green)
             $('#red_count').html("Red: "+data.red)
             $('#available_count').html("Available: "+data.available)
           })
           // getting new player
-          $('button').click(function(){
+          $('#new_user').click(function(){
             name=$('#name').val()
             team=$('#team').val()
             user={
@@ -58,14 +87,14 @@
           socket.on('battlefield',function(data){
             var td;
             for (let i in data){
-              console.log('battlefield', data[i])
+              // console.log('battlefield', data[i])
               td="td#"+i
               if (data[i].constructor==String||(data[i].team!=team)){
                 $(td).html("*")
                 $(td).attr("class","star")
               }
               else{
-                console.log(data[i].team)
+                // console.log(data[i].team)
                 $(td).html(data[i].name)
                 $(td).addClass(data[i].team)
               }
@@ -73,7 +102,7 @@
           })
           $('td').click(function(){
             var hit_location=$(this).attr('id')
-            console.log(hit_location.constructor)
+            // console.log(hit_location.constructor)
             socket.emit("hit",{location: hit_location, enemy: team, enemy_player: name})
           })
           socket.on('wait_for_opponents', function(){
@@ -87,8 +116,13 @@
     </script>
   </head>
   <body>
+    <div id="make_field">
+      <input id="size" type="text" name="size" value="">
+      <button id="size_button" type="button" name="size">Choose battle field size</button>
+    </div>
+
     <table>
-      <tr>
+      <!-- <tr>
         <td id="0">*</td>
         <td id="1">*</td>
         <td id="2">*</td>
@@ -111,7 +145,7 @@
         <td id="13">*</td>
         <td id="14">*</td>
         <td id="15">*</td>
-      </tr>
+      </tr> -->
     </table>
     <div id="user">
       <h1>Choose a name and team</h1>
