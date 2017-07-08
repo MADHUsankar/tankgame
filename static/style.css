@@ -1,0 +1,13 @@
+/* border and styling for table data */
+td{
+  border: 1px solid silver;
+  text-align: center;
+  width: 40px;
+  height: 40px;
+}
+.green{
+  background: green;
+}
+.red{
+  background: red;
+}

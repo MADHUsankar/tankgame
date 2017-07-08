@@ -14,7 +14,7 @@ function populate(size){
   }
   return battlefield;
 }
-battlefield=populate(16);
+// battlefield=populate(16);
 
 
 app.use(express.static(path.join(__dirname, "./static")));
@@ -50,7 +50,7 @@ var io= require( 'socket.io'). listen(server);
 
     function rand_idx(arr){
       let num=Math.floor(Math.random()*arr.length)
-      console.log("random number:",num )
+      // console.log("random number:",num )
       return num
     }
     // Assign location function
@@ -115,6 +115,13 @@ var io= require( 'socket.io'). listen(server);
     }
 
     io.sockets.on( 'connection', function (socket){
+
+    socket.on("battlefiled_size",function(data){
+      console.log(data)
+      let size= Number(data)
+      battlefield=populate(data);
+      console.log("battlerererrerere",battlefield)
+    })
     io.emit('count',team_count(battlefield))
     // got new user from client side
     socket.on("hit",function(data){
@@ -124,9 +131,9 @@ var io= require( 'socket.io'). listen(server);
       io.emit('count',team_count(battlefield))
     })
     socket.on('new_player', function(user){
-      console.log(user)
+      // console.log(user)
       if (!arr_full(battlefield)){
-        console.log("Game is full, can't add new user")
+        // console.log("Game is full, can't add new user")
       }
       else{
         // adding user to battlefield
@@ -143,7 +150,7 @@ var io= require( 'socket.io'). listen(server);
         }
         io.emit('battlefield',battlefield)
         io.emit('count',team_count(battlefield))
-        console.log(battlefield)
+        // console.log(battlefield)
     }
     })
 
